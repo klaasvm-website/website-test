@@ -1,0 +1,33 @@
+name: Update Vragen JSON
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'questions/**'
+
+jobs:
+  generate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Genereer vragen.json
+        run: node generate-vragen.js
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add vragen.json
+          git commit -m "Update vragen.json automatisch gegenereerd"
+          git push
