@@ -1,0 +1,163 @@
+/* Algemene stijlen */
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Takenbalk stijl */
+.taskbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 15px 40px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.taskbar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #ffd700; /* Gele kleur voor de titel */
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+}
+
+/* Download knop */
+.download-button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.download-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Zoekbalk container */
+.search-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Zoekbalk */
+.search-bar {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 900px; /* Breedte van 3 containers */
+    outline: none;
+    background-color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-bar:focus {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* FAQ Grid */
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.faq-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    color: inherit;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.faq-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    border-color: #3498db;
+}
+
+.faq-question {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #2c3e50;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Bericht als er geen resultaten zijn */
+.no-results {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    grid-column: 1 / -1;
+}
+
+.no-results a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.no-results a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .taskbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .taskbar h1 {
+        margin-bottom: 15px;
+    }
+
+    .taskbar-right {
+        justify-content: center;
+    }
+
+    .search-container {
+        padding: 15px;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .faq-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+}
