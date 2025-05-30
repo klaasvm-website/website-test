@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratis Spraakchat Extensie</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            width: 140px;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(79, 195, 247, 0.2);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+        }
+        
+        .connection-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-align: left;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #4fc3f7;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #29b6f6;
+            box-shadow: 0 0 10px rgba(41, 182, 246, 0.5);
+        }
+        
+        button {
+            background: linear-gradient(to right, #4fc3f7, #29b6f6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #29b6f6, #039be5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:disabled {
+            background: #90a4ae;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        button.stop {
+            background: linear-gradient(to right, #ff5252, #f44336);
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.9rem;
+        }
+        
+        .connected {
+            color: #69f0ae;
+        }
+        
+        .disconnected {
+            color: #ffab91;
+        }
+        
+        .call-status {
+            margin: 15px 0;
+            font-weight: 500;
+            min-height: 24px;
+        }
+        
+        .peer-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #4fc3f7;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gratis Spraakchat</h1>
+            <p class="subtitle">Peer-to-peer spraakcommunicatie zonder server - 100% gratis en veilig</p>
+        </header>
+        
+        <div class="features">
+            <div class="feature">
+                <i>🔒</i>
+                <p>Veilig</p>
+            </div>
+            <div class="feature">
+                <i>🎤</i>
+                <p>Heldere spraak</p>
+            </div>
+            <div class="feature">
+                <i>💰</i>
+                <p>Gratis</p>
+            </div>
+            <div class="feature">
+                <i>⚡</i>
+                <p>Snel</p>
+            </div>
+        </div>
+        
+        <div class="connection-panel">
+            <div class="input-group">
+                <label for="roomId">Kamer-ID om te verbinden:</label>
+                <input type="text" id="roomId" placeholder="Voer dezelfde kamer-ID in als je vriend">
+            </div>
+            
+            <button id="startBtn">Start Spraakchat</button>
+            <button id="callBtn" disabled>Verbind met Kamer</button>
+            <button id="hangupBtn" class="stop" disabled>Verbinding Verbreken</button>
+            
+            <div class="call-status" id="callStatus">Klaar om te verbinden...</div>
+            
+            <div class="status">
+                <p>Jouw kamer-ID: <span id="myId" class="peer-id">Nog niet gestart</span></p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Hoe werkt het?</h3>
+            <ol>
+                <li>Klik op "Start Spraakchat" om je eigen kamer-ID te krijgen</li>
+                <li>Deel deze kamer-ID met je vriend</li>
+                <li>Je vriend voert deze ID in en klikt op "Verbind met Kamer"</li>
+                <li>Je kunt nu met elkaar praten via je microfoon</li>
+                <li>Klik op "Verbinding Verbreken" om te stoppen</li>
+            </ol>
+            <p><strong>Belangrijk:</strong> Beide gebruikers moeten dezelfde kamer-ID gebruiken!</p>
+        </div>
+        
+        <footer>
+            <p>Gebruikt WebRTC voor peer-to-peer communicatie • Geen server nodig • 100% gratis</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM elementen
+        const startBtn = document.getElementById('startBtn');
+        const callBtn = document.getElementById('callBtn');
+        const hangupBtn = document.getElementById('hangupBtn');
+        const roomIdInput = document.getElementById('roomId');
+        const callStatus = document.getElementById('callStatus');
+        const myIdSpan = document.getElementById('myId');
+        
+        // Variabelen
+        let peer;
+        let currentCall = null;
+        let localStream = null;
+        
+        // Initialisatie
+        startBtn.addEventListener('click', startSession);
+        callBtn.addEventListener('click', callPeer);
+        hangupBtn.addEventListener('click', hangUp);
+        
+        // Start een nieuwe spraaksessie
+        async function startSession() {
+            try {
+                // Microfoontoegang aanvragen
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: false
+                });
+                
+                // PeerJS initialiseren met gratis publieke server
+                peer = new Peer({
+                    host: '0.peerjs.com',
+                    port: 443,
+                    secure: true,
+                    config: {
+                        iceServers: [
+                            { urls: 'stun:stun.l.google.com:19302' },
+                            { urls: 'stun:stun1.l.google.com:19302' }
+                        ]
+                    }
+                });
+                
+                // Wacht tot peer verbonden is
+                peer.on('open', (id) => {
+                    myIdSpan.textContent = id;
+                    callStatus.textContent = `Klaar! Deel je kamer-ID: ${id}`;
+                    callStatus.className = 'call-status connected';
+                    
+                    startBtn.disabled = true;
+                    callBtn.disabled = false;
+                });
+                
+                // Wacht op binnenkomende verbindingen
+                peer.on('call', (call) => {
+                    // Beantwoord de oproep met onze audiostroom
+                    call.answer(localStream);
+                    
+                    call.on('stream', (remoteStream) => {
+                        // Speel het geluid van de andere gebruiker af
+                        const audio = new Audio();
+                        audio.srcObject = remoteStream;
+                        audio.play();
+                        
+                        callStatus.textContent = `Verbonden met ${call.peer}`;
+                        callStatus.className = 'call-status connected';
+                        hangupBtn.disabled = false;
+                    });
+                    
+                    call.on('close', () => {
+                        callStatus.textContent = 'Verbinding verbroken';
+                        callStatus.className = 'call-status disconnected';
+                        hangupBtn.disabled = true;
+                    });
+                    
+                    currentCall = call;
+                });
+                
+                peer.on('error', (err) => {
+                    console.error('PeerJS error:', err);
+                    callStatus.textContent = `Fout: ${err.type}`;
+                    callStatus.className = 'call-status disconnected';
+                });
+                
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                callStatus.textContent = 'Fout: Toegang tot microfoon geweigerd';
+                callStatus.className = 'call-status disconnected';
+            }
+        }
+        
+        // Verbind met een andere peer
+        function callPeer() {
+            const roomId = roomIdInput.value.trim();
+            if (!roomId) {
+                callStatus.textContent = 'Voer een geldige kamer-ID in';
+                callStatus.className = 'call-status disconnected';
+                return;
+            }
+            
+            if (!peer) {
+                callStatus.textContent = 'Start eerst de spraakchat';
+                callStatus.className = 'call-status disconnected';
+                return;
+            }
+            
+            // Maak de oproep
+            const call = peer.call(roomId, localStream);
+            
+            call.on('stream', (remoteStream) => {
+                // Speel het geluid van de andere gebruiker af
+                const audio = new Audio();
+                audio.srcObject = remoteStream;
+                audio.play();
+                
+                callStatus.textContent = `Verbonden met ${roomId}`;
+                callStatus.className = 'call-status connected';
+                hangupBtn.disabled = false;
+            });
+            
+            call.on('close', () => {
+                callStatus.textContent = 'Verbinding verbroken';
+                callStatus.className = 'call-status disconnected';
+                hangupBtn.disabled = true;
+            });
+            
+            currentCall = call;
+        }
+        
+        // Verbreek de verbinding
+        function hangUp() {
+            if (currentCall) {
+                currentCall.close();
+                currentCall = null;
+                
+                callStatus.textContent = 'Verbinding verbroken';
+                callStatus.className = 'call-status disconnected';
+                hangupBtn.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
